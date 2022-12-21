@@ -408,28 +408,27 @@ function getCommonDirectoryPath(paths) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
-  // return m1.map((row, i) => row.reduce(
-  //   (sum, value, j) => sum + value * m2[i][j], 0,
-  // ));
-  // const product = [];
+function getMatrixProduct(m1, m2) {
+  const product = [];
 
-  // for (let i = 0; i < m1.length; i += 1) {
-  //   let sum = 0;
-  //   const row = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    const row = [];
 
-  //   for (let j = 0; j < m2[0].length; j += 1) {
-  //     sum += m1[i][j] * m2[j][i];
+    for (let k = 0; k < m1.length; k += 1) {
+      let sum = 0;
 
-  //     if (j === m2[0].length - 1) row.push(sum);
-  //   }
+      for (let j = 0; j < m2.length; j += 1) {
+        sum += m1[i][j] * m2[j][k];
+      }
 
-  //   product.push(row);
-  // }
+      row[k] = sum;
+    }
+    product[i] = row;
+  }
 
-  // return product;
+  return product;
 }
+
 
 /**
  * Returns the evaluation of the specified tic-tac-toe position.
@@ -461,8 +460,30 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  let winner;
+  const size = 3;
+  const cols = [];
+  const leftDiag = [];
+  const rightDiag = [];
+
+  for (let i = 0; i < size; i += 1) {
+    cols.push(position.map((row) => row[i]));
+    leftDiag.push(position[i][i]);
+    rightDiag.push(position[i][size - 1 - i]);
+  }
+
+  const paths = [...position, ...cols, leftDiag, rightDiag];
+
+  ['X', '0'].forEach((player) => {
+    const isWon = paths.some(
+      (path) => path.length === 3 && path.every((item) => item === player),
+    );
+
+    if (isWon) winner = player;
+  });
+
+  return winner;
 }
 
 module.exports = {
