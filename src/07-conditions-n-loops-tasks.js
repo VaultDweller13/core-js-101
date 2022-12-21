@@ -121,8 +121,11 @@ function isTriangle(a, b, c) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  return !(rect1.top + rect1.height < rect2.top
+    || rect1.top > rect2.top + rect2.height
+    || rect1.left + rect1.width < rect2.left
+    || rect2.left + rect2.width < rect1.left);
 }
 
 /**
@@ -266,8 +269,20 @@ function reverseInteger(num) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const arr = [...ccn.toString()].slice(0, -1).reverse();
+  const checkDigit = +[...ccn.toString()].reverse()[0];
+
+  const sum = arr.reduce((acc, value, index) => {
+    let temp = +value;
+    if (!(index % 2)) temp = +value * 2;
+    if (temp > 9) temp -= 9;
+
+    return acc + temp;
+  }, 0);
+
+  const computedCheckDigit = (10 - (sum % 10)) % 10;
+  return checkDigit === computedCheckDigit;
 }
 
 /**
@@ -311,8 +326,20 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const bracketsConfig = [['[', ']'], ['(', ')'], ['{', '}'], ['<', '>']];
+  const stack = [];
+
+  [...str].forEach((bracket) => {
+    const currentConfig = bracketsConfig.find((item) => item.includes(bracket));
+    const [openingBracket, closingBracket] = currentConfig;
+
+    if (bracket === closingBracket && stack[0] === openingBracket) {
+      stack.shift();
+    } else stack.unshift(bracket);
+  });
+
+  return !stack.length;
 }
 
 /**
@@ -351,8 +378,16 @@ function toNaryString(num, n) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(paths) {
+  return paths.reduce((common, next) => {
+    const currDirs = common.split('/');
+    const nextDirs = next.split('/');
+    const commonPath = currDirs.filter((ch, index) => ch === nextDirs[index]);
+
+    if (commonPath.length) return `${commonPath.join('/')}/`;
+
+    return commonPath;
+  });
 }
 
 /**
@@ -375,6 +410,25 @@ function getCommonDirectoryPath(/* pathes */) {
  */
 function getMatrixProduct(/* m1, m2 */) {
   throw new Error('Not implemented');
+  // return m1.map((row, i) => row.reduce(
+  //   (sum, value, j) => sum + value * m2[i][j], 0,
+  // ));
+  // const product = [];
+
+  // for (let i = 0; i < m1.length; i += 1) {
+  //   let sum = 0;
+  //   const row = [];
+
+  //   for (let j = 0; j < m2[0].length; j += 1) {
+  //     sum += m1[i][j] * m2[j][i];
+
+  //     if (j === m2[0].length - 1) row.push(sum);
+  //   }
+
+  //   product.push(row);
+  // }
+
+  // return product;
 }
 
 /**
